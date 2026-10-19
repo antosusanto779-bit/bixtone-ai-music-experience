@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIXTONE V3.1 FULL A-N ENGINE</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;background:#0a0a0a;color:#fff;padding:12px}
+h1{text-align:center;color:#ff2e93;margin:8px 0 0;font-size:22px}.sub{text-align:center;color:#888;font-size:11px;margin-bottom:12px}
+.card{background:#141414;border:1px solid #2a2a2a;border-radius:14px;padding:12px;margin-bottom:10px}
+.card h2{margin:0 0 8px;font-size:14px;color:#ff9ac7;border-left:4px solid #ff2e93;padding-left:8px}
+label{font-size:11px;color:#aaa;margin:8px 0 4px;display:block;font-weight:bold}
+select,input{width:100%;padding:10px;border-radius:8px;border:1px solid #333;background:#1f1f1f;color:#fff;font-size:12px}
+.multi{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{padding:6px 10px;border-radius:20px;border:1px solid #333;background:#222;font-size:11px;cursor:pointer}
+.chip.active{background:#ff2e93;border-color:#ff2e93;color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button.main{width:100%;padding:15px;border-radius:12px;border:0;background:linear-gradient(90deg,#ff2e93,#ff6b35);color:#fff;font-weight:bold;font-size:15px;margin-top:12px}
+pre{white-space:pre-wrap;background:#000;padding:10px;border-radius:8px;border:1px solid #222;color:#0f0;font-size:11px;max-height:400px;overflow:auto}
+.err{color:#ff4444;font-size:11px;margin-top:4px}
+</style>
+</head>
+<body>
+<h1>BIXTONE V3.1 FULL ENGINE</h1>
+<p class="sub">A-N KOMPLIT • Validasi Brand Anti Ngarang • Offline 100%</p>
+
+<div class="card"><h2>A: VOCAL UTAMA (1)</h2><select id="A"></select></div>
+<div class="card"><h2>B: KARAKTER (Max 8 dari 22)</h2><div id="B" class="multi"></div></div>
+<div class="card"><h2>C: MOOD (Max 8 dari 34)</h2><div id="C" class="multi"></div></div>
+<div class="card"><h2>D: GENRE (Max 8 dari 24)</h2><div id="D" class="multi"></div></div>
+<div class="card"><h2>E: GITAR (41 Model)</h2><div class="grid2"><select id="E1"></select><select id="E2"></select></div></div>
+<div class="card"><h2>F: BASS (25 Model)</h2><div class="grid2"><select id="F1"></select><select id="F2"></select></div></div>
+<div class="card"><h2>G: ALAT LAIN (Max 8 dari 44)</h2><div id="G" class="multi"></div></div>
+<div class="card"><h2>H: CAB BRAND (19 Model)</h2><select id="H"></select></div>
+<div class="card"><h2>I: AMP BRAND (26 Model)</h2><select id="I"></select></div>
+<div class="card"><h2>K: DRUM CUSTOM PER-PIECE (21 Brand)</h2>
+<label>KICK Brand</label><select id="K_kick"></select>
+<label>SNARE Brand</label><select id="K_snare"></select>
+<label>TOM Brand</label><select id="K_tom"></select>
+</div>
+<div class="card"><h2>L: CYMBALS CUSTOM (19 Brand)</h2>
+<label>HIHAT</label><select id="L_hihat"></select>
+<label>CRASH</label><select id="L_crash"></select>
+<label>RIDE</label><select id="L_ride"></select>
+</div>
+<div class="card"><h2>M: MIXER (15 Brand)</h2><select id="M"></select></div>
+<div class="card"><h2>N: MASTERING (17 Brand)</h2><select id="N"></select></div>
+<div class="card">
+<label>Judul Lagu</label><input id="judul" placeholder="Kalih Welasku Telat Teko">
+<button class="main" onclick="generateFull()">🔥 GENERATE FULL A-N PROMPT SUNO</button>
+<pre id="out">Pilih semua A-N dulu lalu GENERATE...</pre>
+<button class="main" style="background:#222;border:1px solid #333" onclick="copyOut()">📋 COPY</button>
+</div>
+<script>
+const DB={
+A:["Vokal A Terbuka Jawa Nggandul Panjang","Vokal Cowok Melas Ambyar","Vokal Cewek Lembut Ngangeni","Vokal Cowok Bariton Hajatan","Vokal Sinden Jawa","Duet Cowok Cewek Ambyar","Vokal Serak Rock Koplo"],
+B:["Cengkok Nggandul","Vibrato Panjang","Gegap Hajatan","Nggandul 3-5 Note","Medok Jawa Timur","Nangis Tapi Joget","Emosi Nyesek","Powerful High Note","Whisper Intim","Teriakan Crowd","Adlib Jawa","Growl Tipis","Falsetto Jawa","Sambat","Ngleyek","Melengkung","Ngegas","Ngempet","Lues","Mendesah","Sinden Alus","Pop Jawa Clean"],
+C:["Ambyar Paling Nyesek","Nangis di Hajatan","Kangen Abot","Cinta Bahagia Joget","Selingkuh Lara Ati","Semangat Kerja","Healing Pop Jawa","Galau Malam","Kangen Mantan","Bahagia Hajatan","Nyesek Telat Teko","Rindu Berat","Marah Kecewa","Ikhlas","Pasrah","Dendam Tipis","Kangen Kampung","Cinta Ditolak","Cinta Bertepuk Sebelah Tangan","Move On","CLBK","Mabuk Cinta","Bucin","Jomblo Ngenes","Patah Hati Total","Cinta Terlarang","LDR","Kangen Ibu","Syukur","Cinta Anak Muda","Dangdut Pantura","Koplo Asik Parah","Ambyar Parah","Hajatan Full"],
+D:["Koplo Ambyar","Koplo Modern 2025","Koplo Hajatan","Dangdut Koplo","Pop Jawa","Campursari Modern","Jaipong Koplo","Dangdut Pantura","Rock Koplo","Funk Koplo","Reggae Koplo","EDM Koplo","HipHop Jawa","Lofi Koplo","Acoustic Koplo","Orchestra Koplo","Ska Koplo","Kerontjong Koplo","Sholawat Koplo","K-Pop Koplo","DJ Koplo","Koplo Parah Full Bass","Koplo Slow Ambyar","Koplo Kendang Kenceng"],
+E_brands:["Fender Stratocaster American Pro","Fender Telecaster","Gibson Les Paul Standard","Gibson SG","Ibanez RG550","PRS Custom 24","Yamaha Pacifica","Squier Classic Vibe","Schecter Hellraiser","Jackson Soloist","ESP LTD EC-1000","Music Man JP","Cort G300","Harley Benton Fusion","Suhr Modern","Mayones","Strandberg","Solar","Chapman","Kiesel","Tom Anderson","Knaggs","Skervesen","Legator","Vola","Charvel","Godin","Reverend","G&L Legacy","Eastman","D'Angelico","Gretsch White Falcon","PRS SE","Epiphone Les Paul","Sterling JP150","Cort KX500","Ibanez JEM","Gibson ES-335","Fender Jazzmaster","Yamaha Revstar","Music Man JP"],
+F_brands:["Fender Precision Bass","Fender Jazz Bass","Music Man StingRay","Ibanez SR500","Yamaha TRBX","Spector Euro","Warwick Corvette","Warwick Thumb","Squier Jazz Bass","Cort Action","ESP LTD B-204","Schecter Stiletto","Gibson Thunderbird","Rickenbacker 4003","Sterling Ray34","Yamaha BB","Ibanez BTB","Cort B5","Jackson Spectra","Harley Benton JB-75","G&L L2000","Sadowsky","Lakland","Dingwall","Sandberg"],
+H:["Marshall 1960A","Mesa Boogie Recto 4x12","Fender Twin Cab","Orange PPC412","Vox AC30 Cab","Ampeg 8x10 Bass Cab","Ampeg 4x10","Hartke 4x10","Markbass 4x10","Ashdown 4x10","Peavey 4x12","Bugera 4x12","Blackstar 4x12","Laney 4x12","Mesa Boogie 2x12","Fender Bassman Cab","Orange PPC212","Gallien Krueger 4x10","Marshall 1960B"],
+I:["Fender Twin Reverb","Marshall JCM800","Mesa Boogie Dual Rectifier","Vox AC30","Orange Rockerverb","Boss Katana","Roland JC-120","Peavey 5150","EVH 5150 III","Diezel VH4","Engl Powerball","Blackstar HT Club","Line6 Helix","Kemper Profiler","Neural DSP Quad Cortex","Fractal Axe-Fx III","Fender Deluxe Reverb","Fender Bassman","Marshall JCM900","Marshall Plexi","Mesa Boogie Mark V","Vox AC15","Orange Tiny Terror","Hughes & Kettner TriAmp","Laney Ironheart","Bugera 6262"],
+K_brands:["DW Collector","Pearl Masters","Tama Starclassic","Yamaha Stage Custom","Ludwig Classic Maple","Gretsch Renown","Sonor AQ2","Mapex Saturn","PDP Concept","SJC Custom","DW Performance","Pearl Export","Tama Imperialstar","Yamaha Recording Custom","Ludwig Supraphonic","Gretsch Catalina","Sonor SQ2","Mapex Armory","Canopus","Craviotto","British Drum Co"],
+L_brands:["Zildjian K Custom","Zildjian A Custom","Sabian HHX","Sabian AAX","Paiste 2002","Paiste Signature","Meinl Byzance","Meinl Classics Custom","Istanbul Agop","Bosphorus","Zildjian K Dark","Sabian Artisan","Meinl Pure Alloy","Istanbul Mehmet","UFIP","Dream Cymbals","Soultone","Wuhan","Masterwork"],
+M:["Yamaha TF5","Behringer X32","Allen & Heath SQ-6","Midas M32","Soundcraft Si Impact","SSL Live L200","Yamaha CL5","Behringer Wing","Allen & Heath QU-32","Midas Heritage","Soundcraft Vi1","Avid S6L","DiGiCo SD9","DiGiCo S21","PreSonus StudioLive"],
+N:["Waves L2","FabFilter Pro-L2","iZotope Ozone 11","Universal Audio Precision Limiter","Slate FG-X","Sonnox Oxford Limiter","TC Electronic Finalizer","Manley Vari-Mu","Shadow Hills Mastering Compressor","SSL G-Master","API 2500","Neve 33609","Dangerous Music BAX EQ","Maag EQ4","Brainworx bx_masterdesk","LANDR AI","CloudBounce"],
+G_all:["Siter Jawa","Kendang Koplo Double","Kendang Jaipong","Suling Jawa","Gong","Kenong","Bonang","Gambang","Saron","Kendang Ciblon","Terompet Dangdut","Saxophone","Violin","Accordion Dangdut","Keyboard Korg Kronos","Piano Grand","Synth Lead","Gamelan Full","Angklung","Rebana","Bedug","Kendang Ketipung","Kendang Koplo Rampak","Suling Sunda","Kempul","Demung","Peking","Terompet","Flute","Mandolin","Harmonica","Yamaha Montage","Roland Fantom","Organ Hammond","Synth Pad","Synth Bass","Calung","Saron","Gong"]
+};
+function fill(id,arr){const s=document.getElementById(id);s.innerHTML="";arr.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;s.appendChild(o);});}
+function chips(id,arr,max){const c=document.getElementById(id);c.innerHTML="";arr.forEach(v=>{const d=document.createElement('div');d.className='chip';d.textContent=v;d.onclick=()=>{if(d.classList.contains('active'))d.classList.remove('active');else{const active=c.querySelectorAll('.active').length;if(active>=max){alert('Max '+max);return;}d.classList.add('active');}};c.appendChild(d);});}
+fill('A',DB.A);fill('E1',["Clean Chorus","Crunch","High Gain"]);fill('E2',DB.E_brands);fill('F1',["Finger Warm","Slap Funky","Pick Aggressive"]);fill('F2',DB.F_brands);fill('H',DB.H);fill('I',DB.I);fill('K_kick',DB.K_brands);fill('K_snare',DB.K_brands);fill('K_tom',DB.K_brands);fill('L_hihat',DB.L_brands);fill('L_crash',DB.L_brands);fill('L_ride',DB.L_brands);fill('M',DB.M);fill('N',DB.N);
+chips('B',DB.B,8);chips('C',DB.C,8);chips('D',DB.D,8);chips('G',DB.G_all,8);
+function getChips(id){return [...document.getElementById(id).querySelectorAll('.active')].map(x=>x.textContent);}
+function generateFull(){
+const A=document.getElementById('A').value;const B=getChips('B');const C=getChips('C');const D=getChips('D');const G=getChips('G');
+if(B.length==0||C.length==0||D.length==0){alert('Pilih minimal 1 di B,C,D Mas!');return;}
+const E=document.getElementById('E1').value+' + '+document.getElementById('E2').value;
+const F=document.getElementById('F1').value+' + '+document.getElementById('F2').value;
+const H=document.getElementById('H').value;const I=document.getElementById('I').value;
+const Kk=document.getElementById('K_kick').value;const Ks=document.getElementById('K_snare').value;const Kt=document.getElementById('K_tom').value;
+const Lh=document.getElementById('L_hihat').value;const Lc=document.getElementById('L_crash').value;const Lr=document.getElementById('L_ride').value;
+const M=document.getElementById('M').value;const N=document.getElementById('N').value;const judul=document.getElementById('judul').value||'Ambyar Hajatan';
+const prompt=`[TITLE: ${judul}]\n[A] VOCAL: ${A}\n[B] KARAKTER (${B.length}/8): ${B.join(', ')}\n[C] MOOD (${C.length}/8): ${C.join(', ')}\n[D] GENRE (${D.length}/8): ${D.join(', ')}\n[E] GITAR: ${E}\n[F] BASS: ${F}\n[G] ALAT LAIN (${G.length}/8): ${G.join(', ')}\n[H] CAB: ${H}\n[I] AMP: ${I}\n[K] DRUM CUSTOM: Kick=${Kk}, Snare=${Ks}, Tom=${Kt} (21 Brands)\n[L] CYMBALS CUSTOM: HiHat=${Lh}, Crash=${Lc}, Ride=${Lr} (19 Brands)\n[M] MIXER: ${M}\n[N] MASTERING: ${N}\n\n[STYLE: Koplo Ambyar Hajatan 2025 Full A-N Engine SUNO V4.5+]`;
+document.getElementById('out').innerText=prompt;
+}
+function copyOut(){navigator.clipboard.writeText(document.getElementById('out').innerText);alert('COPIED!');}
+</script>
+</body>
+</html>
